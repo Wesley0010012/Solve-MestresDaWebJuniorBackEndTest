@@ -1,0 +1,16 @@
+Descrição Inicial do Projeto:
+
+Olá, meu nome é João, trabalho em um cinema e atualmente estamos com muitos lançamentos de novos filmes, 
+precisamos catalogá-los e organizá-los em algum sistema onde fosse possível, além de cadastrar e listar, ordenar e realizar a paginação dos filmes. 
+Você pode me ajudar?
+
+Requisitos Técnicos:
+NodeJS ✔
+TypeScript ✔
+ExpressJS ✔
+Autenticação JWT ✔
+Organização do projeto ✔
+Código limpo ✔
+Documentação da api ✔
+Banco de dados relacional e seu diagrama ✔
+GIT ✔
