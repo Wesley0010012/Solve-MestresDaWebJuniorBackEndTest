@@ -7,5 +7,6 @@ describe('SignInController Tests', () => {
     const response = sut.handle();
 
     expect(response.statusCode).toBe(400);
+    expect(response.body).toBe('Invalid email is provided');
   });
 });
