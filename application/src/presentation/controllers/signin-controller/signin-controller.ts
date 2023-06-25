@@ -6,8 +6,12 @@ import { HttpRequest, HttpResponse } from "../../protocols/http";
 
 export default class SigninController implements Controller {
   handle(request: HttpRequest): HttpResponse {
-    if(!request.body.email)
-      return badRequest(new InvalidParamError('email'));
+    const inputs = ['email', 'password'];
+
+    for(const input of inputs) {
+      if(!request.body[input])
+        return badRequest(new InvalidParamError(input));
+    }
 
     return {
       statusCode: 200,
