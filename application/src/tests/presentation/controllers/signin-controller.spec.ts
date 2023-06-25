@@ -1,12 +1,13 @@
 import SigninController from "../../../presentation/controllers/signin-controller/signin-controller";
 import InvalidParamError from "../../../presentation/errors/invalid-param-error";
+import MissingParamError from "../../../presentation/errors/missing-param-error";
 import { HttpRequest } from "../../../presentation/protocols/http";
 
 describe('SignInController Tests', () => {
   test('Should Return 400 if no email is provided.', () => {
     const sut = new SigninController;
 
-    const error = new InvalidParamError('email');
+    const error = new MissingParamError('email');
 
     const request: HttpRequest = {
       body: {
@@ -25,7 +26,7 @@ describe('SignInController Tests', () => {
   test('Should Return 400 if no password is provided.', () => {
     const sut = new SigninController;
 
-    const error = new InvalidParamError('password');
+    const error = new MissingParamError('password');
 
     const request: HttpRequest = {
       body: {
