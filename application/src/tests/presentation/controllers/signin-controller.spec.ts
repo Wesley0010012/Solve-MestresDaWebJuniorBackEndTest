@@ -21,4 +21,23 @@ describe('SignInController Tests', () => {
     expect(response.body).toEqual(error);
     expect(response.body.message).toEqual(error.message);
   });
+
+  test('Should Return 400 if no password is provided.', () => {
+    const sut = new SigninController;
+
+    const error = new InvalidParamError('password');
+
+    const request: HttpRequest = {
+      body: {
+        email: "any_email",
+        password: ""
+      }
+    }
+
+    const response = sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual(error);
+    expect(response.body.message).toEqual(error.message);
+  });
 });
