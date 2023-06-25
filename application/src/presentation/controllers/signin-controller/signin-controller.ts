@@ -1,13 +1,16 @@
+import { Authentication } from "../../../domain/usecases/authentication";
+import AccessDeniedError from "../../errors/access-denied-error";
+import InternalServerError from "../../errors/internal-server-error";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { badRequest, success } from "../../helpers/http-helpers";
+import { badRequest, serverError, success, unauthorized } from "../../helpers/http-helpers";
 import { Controller } from "../../protocols/controller";
 import { EmailValidator } from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
 
 
 export default class SigninController implements Controller {
-  constructor(private readonly emailValidator: EmailValidator) {
+  constructor(private readonly emailValidator: EmailValidator, private readonly authentication: Authentication) {
   }
 
   handle(request: HttpRequest): HttpResponse {
@@ -23,6 +26,13 @@ export default class SigninController implements Controller {
     if(!this.emailValidator.isValid(email))
       return badRequest(new InvalidParamError('email'));
 
-    return success('all ok');
+    try {
+      if(!this.authentication.auth({email: email, password: password}))
+        return unauthorized(new AccessDeniedError);
+      else
+        return success("OK");
+    } catch(e: any) {
+      return serverError(new InternalServerError);
+    }
   }
 }
