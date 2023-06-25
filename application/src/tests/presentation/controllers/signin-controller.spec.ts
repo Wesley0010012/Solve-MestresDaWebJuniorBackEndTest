@@ -1,11 +1,13 @@
-import { response } from "express";
+
 import SigninController from "../../../presentation/controllers/signin-controller/signin-controller";
 import InvalidParamError from "../../../presentation/errors/invalid-param-error";
 import MissingParamError from "../../../presentation/errors/missing-param-error";
 import { EmailValidator } from "../../../presentation/protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../../presentation/protocols/http";
 
-const makeEmailValidator = (): EmailValidator => {
+import * as faker from 'faker';
+
+function makeEmailValidator(): EmailValidator {
   class emailValidatorStub implements EmailValidator {
     isValid(email: string): boolean {
       return true;
@@ -87,5 +89,22 @@ describe('SignInController Tests', () => {
     expect(response.statusCode).toBe(400);
     expect(response.body).toEqual(error);
     expect(response.body.message).toBe(error.message);
+  });
+
+  test('Should call EmailValidator with the correct Email', () => {
+    const { sut, emailValidatorStub } = makeSut();
+
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
+
+    const request: HttpRequest = {
+      body: {
+        email: faker.internet.email,
+        password: faker.internet.password
+      }
+    }
+
+    sut.handle(request);
+
+    expect(isValidSpy).toBeCalledWith(request.body.email);
   });
 });
