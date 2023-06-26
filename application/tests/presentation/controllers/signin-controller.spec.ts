@@ -181,4 +181,20 @@ describe('SignInController Tests', () => {
     expect(response.body).toEqual(error);
     expect(response.body.message).toBe(error.message);
   });
+
+  test('Should Authenticate have been called with correct login', async () => {
+    const {sut, authenticationStub} = makeSut();
+
+    const authenticationSpy = jest.spyOn(authenticationStub, 'auth');
+
+    const error = new AccessDeniedError;
+
+    const request: HttpRequest = {
+      body: mockRequest()
+    };
+
+    await sut.handle(request);
+
+    expect(authenticationSpy).toBeCalledWith({email: request.body.email, password: request.body.password});
+  })
 });
