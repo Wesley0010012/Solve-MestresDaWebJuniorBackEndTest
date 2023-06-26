@@ -24,7 +24,7 @@ function makeEmailValidator(): EmailValidator {
 
 function makeAuthentication(): Authentication {
   class AuthenticationStub implements Authentication {
-    auth(authParams: Authentication.Params): Authentication.Result {
+    auth(authParams: Authentication.Params): Authentication.Result|false {
       return {
         accessToken: "ok",
         name: "Ok"
@@ -160,5 +160,25 @@ describe('SignInController Tests', () => {
     expect(result.statusCode).toBe(500);
     expect(result.body).toEqual(error);
     expect(result.body.message).toBe(error.message);
+  });
+
+  test('Should return 401 if Authenticate with incorrect login', async () => {
+    const {sut, authenticationStub} = makeSut();
+
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
+      return false;
+    });
+
+    const error = new AccessDeniedError;
+
+    const request: HttpRequest = {
+      body: mockRequest()
+    };
+
+    const response = await sut.handle(request);
+
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toEqual(error);
+    expect(response.body.message).toBe(error.message);
   });
 });
