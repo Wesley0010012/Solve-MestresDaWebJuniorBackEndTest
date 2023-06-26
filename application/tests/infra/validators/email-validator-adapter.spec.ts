@@ -1,6 +1,6 @@
 /*
-  Validator Full Test Sequence.
-  Objective: test all possible cases and states for the given Validator.
+  EmailValidatorAdapter Full Test Sequence.
+  Objective: test all possible cases and states for the given ValidatorAdapter.
   Test Sequence:
   -> Should return false if empty email was provided.
   -> Should return false if invalid email was provided.

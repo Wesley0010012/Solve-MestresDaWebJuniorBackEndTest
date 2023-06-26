@@ -1,5 +1,5 @@
 /*
-  Controller Full Test Sequence.
+  SignInController Full Test Sequence.
   Objective: test all possible cases and states for the given Controller.
   Test Sequence:
   -> Should Return 400 if no email is provided.
