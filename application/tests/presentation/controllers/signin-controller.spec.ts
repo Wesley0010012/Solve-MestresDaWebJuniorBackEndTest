@@ -1,7 +1,7 @@
 
 import { Authentication } from "../../../src/domain/usecases";
 import SigninController from "../../../src/presentation/controllers/signin-controller/signin-controller";
-import { InternalServerError, MissingParamError, InvalidParamError } from "../../../src/presentation/errors/";
+import { InternalServerError, MissingParamError, InvalidParamError, AccessDeniedError } from "../../../src/presentation/errors/";
 import { EmailValidator } from "../../../src/validation/protocols/";
 import { HttpRequest, HttpResponse } from "../../../src/presentation/protocols/";
 
@@ -142,7 +142,7 @@ describe('SignInController Tests', () => {
     expect(result.body.message).toBe(error.message);
   });
 
-  test('Should return 500 if Validator throws', async () => {
+  test('Should return 500 if EmailValidator throws', async () => {
     const { sut, emailValidatorStub } = makeSut();
 
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
