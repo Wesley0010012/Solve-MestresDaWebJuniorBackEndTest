@@ -1,12 +1,8 @@
-import { Authentication } from "../../../domain/usecases/authentication";
-import AccessDeniedError from "../../errors/access-denied-error";
-import InternalServerError from "../../errors/internal-server-error";
-import InvalidParamError from "../../errors/invalid-param-error";
-import MissingParamError from "../../errors/missing-param-error";
-import { badRequest, serverError, success, unauthorized } from "../../helpers/http-helpers";
-import { Controller } from "../../protocols/controller";
-import { EmailValidator } from "../../../validation/protocols/email-validator";
-import { HttpRequest, HttpResponse } from "../../protocols/http";
+import { Authentication } from "../../../domain/usecases/";
+import { AccessDeniedError, InternalServerError, InvalidParamError, MissingParamError } from '../../errors/';
+import { badRequest, serverError, success, unauthorized } from "../../helpers/";
+import { EmailValidator } from "../../../validation/protocols/";
+import { Controller, HttpRequest, HttpResponse } from "../../protocols/";
 
 
 export default class SigninController implements Controller {
@@ -27,10 +23,12 @@ export default class SigninController implements Controller {
       if(!this.emailValidator.isValid(email))
         return badRequest(new InvalidParamError('email'));
 
-      if(!this.authentication.auth({email: email, password: password}))
+      const result = this.authentication.auth({email: email, password: password});
+
+      if(!result)
         return unauthorized(new AccessDeniedError);
       else
-        return success("OK");
+        return success(result);
     } catch(e: any) {
       return serverError(new InternalServerError);
     }

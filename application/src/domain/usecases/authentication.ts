@@ -1,6 +1,6 @@
 
 export interface Authentication {
-  auth: (authParams: Authentication.Params) => Authentication.Result;
+  auth: (authParams: Authentication.Params) => Authentication.Result|false;
 }
 
 
