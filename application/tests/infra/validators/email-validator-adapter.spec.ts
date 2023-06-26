@@ -10,7 +10,7 @@ interface SutTypes {
 
 const mockRequest = () => {
   return {
-    email: faker.internet.email
+    email: faker.internet.email()
   };
 }
 
@@ -34,10 +34,20 @@ describe('EmailValidatorAdapter Tests', () => {
   test('Should return false if invalid email was provided', () => {
     const { sut } = makeSut();
 
-    const data = mockRequest();
-
     const result = sut.isValid('any_invalid_email');
 
     expect(result).toBe(false);
   });
+
+  test('Should EmailValidatorAdapter have been called with the correct Email', () => {
+    const { sut } = makeSut();
+
+    const sutSpy = jest.spyOn(sut, 'isValid');
+
+    const data = mockRequest();
+
+    sut.isValid(data.email);
+
+    expect(sutSpy).toBeCalledWith(data.email);
+  })
 });
