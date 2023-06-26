@@ -30,4 +30,14 @@ describe('EmailValidatorAdapter Tests', () => {
 
     expect(result).toBe(false);
   });
+
+  test('Should return false if invalid email was provided', () => {
+    const { sut } = makeSut();
+
+    const data = mockRequest();
+
+    const result = sut.isValid('any_invalid_email');
+
+    expect(result).toBe(false);
+  });
 });
