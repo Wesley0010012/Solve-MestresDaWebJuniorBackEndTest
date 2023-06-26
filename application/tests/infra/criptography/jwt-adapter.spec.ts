@@ -35,4 +35,12 @@ describe('JWTAdapter tests', () => {
 
     expect(jwtSignSpy).toBeCalledWith({id: 'any_value'}, 'secret');
   });
+
+  test('Should return Cyphered Text', async() => {
+    const { sut } = makeSut();
+
+    const result = await sut.encrypt('any_value');
+
+    expect(result).toBe('any_token');
+  })
 })
