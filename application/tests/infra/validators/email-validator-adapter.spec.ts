@@ -49,5 +49,15 @@ describe('EmailValidatorAdapter Tests', () => {
     sut.isValid(data.email);
 
     expect(sutSpy).toBeCalledWith(data.email);
-  })
+  });
+
+  test('Should return true if valid email was provided', () => {
+    const { sut } = makeSut();
+
+    const data = mockRequest();
+
+    const result = sut.isValid(data.email);
+
+    expect(result).toBe(true);
+  });
 });
