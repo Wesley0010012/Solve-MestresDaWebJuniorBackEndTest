@@ -1,4 +1,5 @@
 
+
 import { Authentication } from "../../../src/domain/usecases";
 import SigninController from "../../../src/presentation/controllers/signin-controller/signin-controller";
 import { InternalServerError, MissingParamError, InvalidParamError, AccessDeniedError } from "../../../src/presentation/errors/";
@@ -196,5 +197,24 @@ describe('SignInController Tests', () => {
     await sut.handle(request);
 
     expect(authenticationSpy).toBeCalledWith({email: request.body.email, password: request.body.password});
-  })
+  });
+
+  test('Should return 200 if logged', async () => {
+    const { sut } = makeSut();
+
+    const expectedResponse: Authentication.Result = {
+      accessToken: "ok",
+      name: "Ok"
+    }
+
+    const request: HttpRequest = {
+      body: mockRequest()
+    };
+
+    const response = await sut.handle(request);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.accessToken).toBe(expectedResponse.accessToken);
+    expect(response.body.name).toBe(expectedResponse.name);
+  });
 });
