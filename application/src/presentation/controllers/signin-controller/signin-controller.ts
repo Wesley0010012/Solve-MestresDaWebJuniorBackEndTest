@@ -23,10 +23,12 @@ export default class SigninController implements Controller {
       if(!this.emailValidator.isValid(email))
         return badRequest(new InvalidParamError('email'));
 
-      if(!this.authentication.auth({email: email, password: password}))
+      const result = this.authentication.auth({email: email, password: password});
+
+      if(!result)
         return unauthorized(new AccessDeniedError);
       else
-        return success("OK");
+        return success(result);
     } catch(e: any) {
       return serverError(new InternalServerError);
     }
