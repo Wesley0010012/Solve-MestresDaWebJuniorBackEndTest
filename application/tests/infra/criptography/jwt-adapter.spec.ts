@@ -1,4 +1,16 @@
+/*
+  JWTAdapter Full Test Sequence.
+  Objective: test all possible cases and states for the given CriptographyAdapter.
+  Test Sequence:
+  -> Should Called Encrypt Sign with Correct Values.
+  -> Should return the Cyphered Text.
+  -> Should throw if jwt-sign throws.
+  -> Should Called Decrypt Sign with Correct Values.
+  -> Should return the PlainText.
+  -> Should throw if jwt-verify throws.
 
+  Test Deferred by: Wesley Laurindo.
+*/
 
 import jwt from 'jsonwebtoken';
 import { JWTAdapter } from '../../../src/infra/criptography/jwt-adapter';
@@ -26,7 +38,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('JWTAdapter tests', () => {
-  test('Should Called Encrypt Sign with Correct Values', async () => {
+  test('Should Called Encrypt Sign with Correct Values.', async () => {
     const { sut } = makeSut();
 
     const jwtSignSpy = jest.spyOn(jwt, 'sign');
@@ -36,7 +48,7 @@ describe('JWTAdapter tests', () => {
     expect(jwtSignSpy).toBeCalledWith({id: 'any_value'}, 'secret');
   });
 
-  test('Should return the Cyphered Text', async() => {
+  test('Should return the Cyphered Text.', async() => {
     const { sut } = makeSut();
 
     const result = await sut.encrypt('any_value');
@@ -44,7 +56,7 @@ describe('JWTAdapter tests', () => {
     expect(result).toBe('any_token');
   });
 
-  test('Should throw if jwt-sign throws', async () => {
+  test('Should throw if jwt-sign throws.', async () => {
     const { sut } = makeSut();
 
     jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
@@ -56,7 +68,7 @@ describe('JWTAdapter tests', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  test('Should Called Decrypt Sign with Correct Values', async () => {
+  test('Should Called Decrypt Sign with Correct Values.', async () => {
     const { sut } = makeSut();
 
     const jwtEncryptSpy = jest.spyOn(jwt, 'verify');
@@ -66,7 +78,7 @@ describe('JWTAdapter tests', () => {
     expect(jwtEncryptSpy).toBeCalledWith('any_token', 'secret');
   });
 
-  test('Should return the PlainText', async () => {
+  test('Should return the PlainText.', async () => {
     const { sut } = makeSut();
 
     const result = await sut.decrypt('any_token');
@@ -74,7 +86,7 @@ describe('JWTAdapter tests', () => {
     expect(result).toBe('any_value');
   });
 
-  test('Should throw if jwt-verify throws', async () => {
+  test('Should throw if jwt-verify throws.', async () => {
     const { sut } = makeSut();
 
     jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
