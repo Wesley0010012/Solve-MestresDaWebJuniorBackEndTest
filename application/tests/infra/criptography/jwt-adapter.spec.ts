@@ -8,7 +8,7 @@ jest.mock('jsonwebtoken', () => ({
     return 'any_token';
   },
 
-  async encrypt(): Promise<string> {
+  async verify(): Promise<string> {
     return 'any_value';
   }
 }));
@@ -54,5 +54,15 @@ describe('JWTAdapter tests', () => {
     const promise = sut.encrypt('any_value');
 
     await expect(promise).rejects.toThrow();
+  });
+
+  test('Should Called Decrypt Sign with Correct Values', async () => {
+    const { sut } = makeSut();
+
+    const jwtEncryptSpy = jest.spyOn(jwt, 'verify');
+
+    await sut.decrypt('any_token');
+
+    expect(jwtEncryptSpy).toBeCalledWith('any_token', 'secret');
   });
 })
