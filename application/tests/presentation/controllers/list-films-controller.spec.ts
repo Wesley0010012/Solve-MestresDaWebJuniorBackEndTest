@@ -15,7 +15,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('ListFilmsController', () => {
-  test('Test Should return 400 if no token was provided', async () => {
+  test('Should return 400 if no token was provided', async () => {
     const error = new MissingParamError('token');
 
     const { sut } = makeSut();
@@ -30,5 +30,24 @@ describe('ListFilmsController', () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toEqual(error);
+    expect(response.body.message).toBe(error.message);
+  });
+
+  test('Should return 400 if no order was provided', async() => {
+    const error = new MissingParamError('order');
+
+    const { sut } = makeSut();
+
+    const request: HttpRequest = {
+      body: {
+        token: 'any_token'
+      }
+    }
+
+    const response: HttpResponse = await sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual(error);
+    expect(response.body.message).toBe(error.message);
   });
 });
