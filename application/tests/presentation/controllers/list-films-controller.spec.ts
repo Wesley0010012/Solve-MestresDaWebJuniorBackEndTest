@@ -1,16 +1,33 @@
+import { Decrypter } from "../../../src/data"
 import { ListFilmsController } from "../../../src/presentation/controllers/list-films-controller/list-films-controller"
-import { InvalidParamError, MissingParamError } from "../../../src/presentation/errors"
+import { AccessDeniedError, InvalidParamError, MissingParamError } from "../../../src/presentation/errors"
+import { serverError } from "../../../src/presentation/helpers"
 import { HttpRequest, HttpResponse } from "../../../src/presentation/protocols"
 
+const makeJWT = (): Decrypter => {
+  class JWT implements Decrypter {
+    constructor(private readonly secret: string){}
+
+    decrypt(cyphertext: string): Promise<string> {
+      return Promise.resolve("any_value");
+    }
+  }
+
+  return new JWT('secret');
+}
+
 interface SutTypes {
-  sut: ListFilmsController
+  sut: ListFilmsController,
+  JWT: Decrypter
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new ListFilmsController;
+  const JWT = makeJWT();
+  const sut = new ListFilmsController(JWT);
 
   return {
-    sut
+    sut,
+    JWT
   };
 }
 
@@ -22,7 +39,7 @@ describe('ListFilmsController', () => {
 
     const request: HttpRequest = {
       body: {
-        order: false
+        order: 'any'
       }
     }
 
@@ -48,6 +65,28 @@ describe('ListFilmsController', () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toEqual(error);
+    expect(response.body.message).toBe(error.message);
+  });
+
+  test('Should return 401 if JWT throws', async () => {
+    const error = new AccessDeniedError();
+
+    const { sut, JWT } = makeSut();
+
+    jest.spyOn(JWT, 'decrypt').mockImplementationOnce((): Promise<string> => {
+      throw new Error();
+    });
+
+    const request: HttpRequest = {
+      body: {
+        token: 'false_token',
+        order: 'any'
+      }
+    }
+
+    const response: HttpResponse = await sut.handle(request);
+
+    expect(response.statusCode).toBe(401);
     expect(response.body.message).toBe(error.message);
   });
 });
